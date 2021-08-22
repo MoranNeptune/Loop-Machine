@@ -1683,13 +1683,6 @@
   "resolved" "https://registry.npmjs.org/alphanum-sort/-/alphanum-sort-1.0.2.tgz"
   "version" "1.0.2"
 
-"angular-gridster2@^12.1.0":
-  "integrity" "sha512-o4iRCGdKoSLqFaIA9ZkiX3gOcNZpYDzisDV7+M832kYglo7byDVsPhLHnI4GUDigtyMqCHYjL5dhbJMk/Mv5/A=="
-  "resolved" "https://registry.npmjs.org/angular-gridster2/-/angular-gridster2-12.1.0.tgz"
-  "version" "12.1.0"
-  dependencies:
-    "tslib" "^2.1.0"
-
 "angular-uuid@^0.0.4":
   "integrity" "sha1-h6hgyh02rjiffsYP0ENm7cDjWE0="
   "resolved" "https://registry.npmjs.org/angular-uuid/-/angular-uuid-0.0.4.tgz"
@@ -5453,13 +5446,6 @@
   "integrity" "sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw=="
   "resolved" "https://registry.npmjs.org/neo-async/-/neo-async-2.6.2.tgz"
   "version" "2.6.2"
-
-"ng-waveform@^0.2.1":
-  "integrity" "sha512-pGaxEro60TrvnrKJYj8i8Mq4arY/kU8wl7XYUwX+LOzGjrwsWL/5jnQAnW1bHQzrs4LmoDRybjj77nQH0WdS8A=="
-  "resolved" "https://registry.npmjs.org/ng-waveform/-/ng-waveform-0.2.1.tgz"
-  "version" "0.2.1"
-  dependencies:
-    "tslib" "^1.9.0"
 
 "nice-try@^1.0.4":
   "integrity" "sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ=="

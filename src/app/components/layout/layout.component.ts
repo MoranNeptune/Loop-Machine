@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { GridsterComponentInterface, GridsterConfig, GridsterItem, GridsterItemComponentInterface } from 'angular-gridster2';
 import { LoopPad } from 'src/app/objects/loop-pad';
 import { LayoutService } from 'src/app/services/layout.service';
 import { moveItemInArray } from '@angular/cdk/drag-drop';
