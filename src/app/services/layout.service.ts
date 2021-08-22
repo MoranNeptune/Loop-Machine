@@ -1,8 +1,5 @@
 import { LoopPad } from './../objects/loop-pad';
-import { EventEmitter, Injectable, Output, OnInit } from '@angular/core';
-import { DisplayGrid, GridsterConfig, GridsterItem, GridType } from 'angular-gridster2';
-import * as uuid from 'uuid';
-import { LayoutComponent } from '../components/layout/layout.component';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
