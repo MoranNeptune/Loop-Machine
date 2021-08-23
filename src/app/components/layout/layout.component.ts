@@ -36,6 +36,7 @@ export class LayoutComponent implements OnInit {
     this.addLoopItem(new LoopPad('PAS3GROOVE1.03B.mp3'));
     this.addLoopItem(new LoopPad('SilentStar_120_Em_OrganSynth.mp3'));
 
+    // suppotrs the communication between this component to userActivityService
     this.userActivityService.onLoadSingleLoop(this.loadSingleLoop.bind(this));
     this.userActivityService.onPlayAllLoops(this.playSomeLoops.bind(this));
     this.userActivityService.onPauseSingleLoop(this.pauseSingleLoop.bind(this));
@@ -125,14 +126,17 @@ export class LayoutComponent implements OnInit {
     }
   }
 
+  // returns true if record mode on, else false
   getUserActivityMode(): boolean {
     return this.userActivityService.getUserActivityMode();
   }
 
+  // reuturns true if record is over, else false
   isRecordOver(): boolean {
     return this.userActivityService.isRecordOver();
   }
 
+  // play the session that was recorded
   playSession(): void {
     this.layoutService.playSession();
     for (const loop of this.loopPads) {

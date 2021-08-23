@@ -1,5 +1,5 @@
 /**
- * User Activity holds the information needed inorder to follow user activity
+ * Timer holds the information needed inorder to activate time on record
  */
  export class Timer {
   totalSeconds: number;

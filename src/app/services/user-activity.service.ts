@@ -15,8 +15,10 @@ export class UserActivityService {
 
   private switchStates = false;
 
+  // holds user activities
   public userActivities: UserActivity[] = [];
 
+  // used to communicate with LayoutComponent
   private pauseAllLoops!: (loops: LoopPad[]) => void;
   private pauseSingleLoop!: (loop: LoopPad) => void;
   private playAllLoops!: (loops: LoopPad[]) => void;
