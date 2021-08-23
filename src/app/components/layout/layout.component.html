@@ -6,23 +6,28 @@
   <div class="row activity-buttons">
     <div class="col">
       <button
-        (click)="playAllLoops()"
+        (click)="playAllLoopsCover()"
         >
         <i class="fas fa-play fa-lg activity-button"></i>
       </button>
     </div>
     <div class="col">
       <button
-        (click)="pauseAllLoops()"
+        (click)="pauseAllLoopsCover()"
         >
         <i class="fas fa-pause fa-lg activity-button"></i>
       </button>
     </div>
     <div class="col">
-      <button
+      <button id='recordBtn'
         (click)="recordSession()"
         >
         <i class="fas fa-record-vinyl fa-lg activity-button"></i>
+      </button>
+      <button id="playSessionBtn" *ngIf="isRecordOver()"
+        (click)="playSession()"
+        >
+        <i class="fas fa-play-circle fa-lg activity-button"></i>
       </button>
     </div>
   </div>
@@ -32,7 +37,7 @@
         <div class="item" *ngFor="let loop of loopPads" cdkDrag >
           <div class="row">
             <div class="col">
-              <mat-slide-toggle class="slide-toggle" color="primary"
+              <mat-slide-toggle (id)="loop.loopName" class="slide-toggle" color="primary"
                 (checked)="loopPadsActivity.get(loop)"
                 (change)="updateLoopState($event, loop)">
               </mat-slide-toggle>

@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LoopPad } from 'src/app/objects/loop-pad';
 import { LayoutService } from 'src/app/services/layout.service';
 import { moveItemInArray } from '@angular/cdk/drag-drop';
+import { UserActivityService } from 'src/app/services/user-activity.service';
 
 @Component({
   selector: 'app-layout',
@@ -15,10 +16,13 @@ export class LayoutComponent implements OnInit {
   public loopPadsActivity: Map<LoopPad, boolean> = new Map<LoopPad, boolean>();
   public loopPads: LoopPad[] = [];
   public currToggleMode = false;
+  private recordBtnColor = '';
 
   constructor(
-    public layoutService: LayoutService
-  ) { }
+    public layoutService: LayoutService,
+    public userActivityService: UserActivityService
+  ) {
+   }
 
   ngOnInit(): void {
     // initialize all loop pads
@@ -31,6 +35,11 @@ export class LayoutComponent implements OnInit {
     this.addLoopItem(new LoopPad('MazePolitics_120_Perc.mp3'));
     this.addLoopItem(new LoopPad('PAS3GROOVE1.03B.mp3'));
     this.addLoopItem(new LoopPad('SilentStar_120_Em_OrganSynth.mp3'));
+
+    this.userActivityService.onLoadSingleLoop(this.loadSingleLoop.bind(this));
+    this.userActivityService.onPlayAllLoops(this.playSomeLoops.bind(this));
+    this.userActivityService.onPauseSingleLoop(this.pauseSingleLoop.bind(this));
+    this.userActivityService.onPauseAllLoops(this.pauseSomeLoops.bind(this));
   }
 
   // drop function in drag&drop
@@ -51,10 +60,18 @@ export class LayoutComponent implements OnInit {
   // updates the loop playing state according to the toggle button
   updateLoopState(event: any, loop: LoopPad): void {
     if (event.checked) {
-      this.playSingleLoop(loop);
+      this.loadSingleLoop(loop);
     } else {
       this.pauseSingleLoop(loop);
     }
+  }
+
+  playAllLoopsCover(): void {
+    if (this.userActivityService.isRecordExists()) {
+      this.layoutService.initLayout();
+      this.userActivityService.userActivities = [];
+    }
+    this.playAllLoops();
   }
 
   // play all loop pads together
@@ -68,24 +85,76 @@ export class LayoutComponent implements OnInit {
     this.layoutService.playAllLoops(playingLoops);
   }
 
+  pauseAllLoopsCover(): void {
+    if (this.userActivityService.isRecordExists()) {
+      this.layoutService.initLayout();
+      this.userActivityService.userActivities = [];
+    }
+    this.pauseAllLoops();
+  }
+
   // pause all loop pads together
   pauseAllLoops(): void {
     this.layoutService.pauseAllLoops();
   }
 
+  // play all loop pads together
+  playSomeLoops(loops: LoopPad[]): void {
+    this.layoutService.playAllLoops(loops);
+  }
+
+  // pause all loop pads together
+  pauseSomeLoops(loops: LoopPad[]): void {
+    this.layoutService.pauseSomeLoops(loops);
+  }
+
   // record a session with tracking user activity
   recordSession(): void {
+    const recordBtn = document.getElementById('recordBtn');
+    if (!this.getUserActivityMode()) {
+      if (recordBtn !== null) {
+        this.recordBtnColor = recordBtn.style.color;
+        recordBtn.style.color = 'red';
+      }
+      this.layoutService.startRecordSession();
+    } else {
+      if (recordBtn !== null) {
+        recordBtn.style.color = this.recordBtnColor;
+      }
+      this.layoutService.endRecordSession();
+    }
+  }
+
+  getUserActivityMode(): boolean {
+    return this.userActivityService.getUserActivityMode();
+  }
+
+  isRecordOver(): boolean {
+    return this.userActivityService.isRecordOver();
+  }
+
+  playSession(): void {
+    this.layoutService.playSession();
+    for (const loop of this.loopPads) {
+        this.loopPadsActivity.set(loop, false);
+    }
+    // after a playSeesion over -> initialize all states
+    const playSessionElem = document.getElementById('playSessionBtn');
+    if (playSessionElem !== null) {
+      playSessionElem.style.display = 'none';
+    }
   }
 
   // updating single loop to on-mode
-  private playSingleLoop(loop: LoopPad): void {
+  private loadSingleLoop(loop: LoopPad): void {
     this.layoutService.waitingLoops.push(loop);
     this.loopPadsActivity.set(loop, true);
+    this.layoutService.updateLoadSingleLoopUserActivity(loop);
   }
 
   // updating single loop to off-mode
   private pauseSingleLoop(loop: LoopPad): void {
-    this.layoutService.endLoop(loop.loopName);
+    this.layoutService.pauseSingleLoop(loop, true);
     this.loopPadsActivity.set(loop, false);
   }
 
