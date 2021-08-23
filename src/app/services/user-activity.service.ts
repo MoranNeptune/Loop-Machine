@@ -66,7 +66,7 @@ export class UserActivityService {
   }
 
   isRecordExists(): boolean {
-    return this.userActivities.length > 0;
+    return !this.recordModeOn && this.userActivities.length > 0;
   }
 
   playSession(): void {
