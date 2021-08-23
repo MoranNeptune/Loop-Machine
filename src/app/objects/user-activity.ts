@@ -7,12 +7,10 @@ export class UserActivity {
   actionTimeSeconds: number;
   loops: LoopPad[];
   actionFunction: string;
-  durationLoopTime?: number;
 
-  constructor(actionTimeSeconds: number, loops: LoopPad[], actionFunction: string, durationLoopTime?: number) {
+  constructor(actionTimeSeconds: number, loops: LoopPad[], actionFunction: string) {
     this.actionTimeSeconds = actionTimeSeconds;
     this.loops = loops;
     this.actionFunction = actionFunction;
-    this.durationLoopTime = durationLoopTime;
   }
 }

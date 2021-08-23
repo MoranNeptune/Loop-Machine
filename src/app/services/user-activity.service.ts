@@ -71,17 +71,47 @@ export class UserActivityService {
 
   playSession(): void {
     const loadSingleLoopStack: LoopPad[] = [];
-
+    console.log(this.userActivities);
     // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < this.userActivities.length; i++) {
-      const userActivity = this.userActivities[i];
-      const tempThis = this;
-      if (userActivity.loops.length > 0) {
-        switch (userActivity.actionFunction) {
-          case 'pauseAllLoops' :
-            for (const loop of userActivity.loops) {
-              this.loadLoopIfNeeded(loadSingleLoopStack, loop);
-            }
+      let timeOut = 0;
+      if (i !== 0 && i + 1 < this.userActivities.length) {
+        timeOut = (this.userActivities[i + 1].actionTimeSeconds - this.userActivities[i].actionTimeSeconds) * 1000;
+      }
+      if (i + 1 < this.userActivities.length) {
+        setTimeout(
+          () => {
+            this.generateRecover(i, loadSingleLoopStack);
+        }, timeOut);
+      }
+    }
+  }
+
+  private generateRecover(i: number, loadSingleLoopStack: LoopPad[]): UserActivity {
+    const userActivity = this.userActivities[i];
+    const tempThis = this;
+    if (userActivity.loops.length > 0) {
+      switch (userActivity.actionFunction) {
+        case 'pauseAllLoops':
+          for (const loop of userActivity.loops) {
+            this.loadLoopIfNeeded(loadSingleLoopStack, loop);
+          }
+          let timeOut = 0;
+          if (i === 0) {
+            this.playAllLoops(userActivity.loops);
+            timeOut = userActivity.actionTimeSeconds * 1000;
+          } else {
+            timeOut = (userActivity.actionTimeSeconds - this.userActivities[i - 1].actionTimeSeconds) * 1000;
+          }
+          setTimeout(
+            () => {
+              tempThis.pauseAllLoops(userActivity.loops);
+            }, timeOut);
+          break;
+        case 'pauseSingleLoop':
+          const loopPad: LoopPad = userActivity.loops[0];
+          if (this.userActivities[i - 1].actionFunction !== 'pauseAllLoops') {
+            this.loadLoopIfNeeded(loadSingleLoopStack, loopPad);
             let timeOut = 0;
             if (i === 0) {
               this.playAllLoops(userActivity.loops);
@@ -91,40 +121,27 @@ export class UserActivityService {
             }
             setTimeout(
               () => {
-              tempThis.pauseAllLoops(userActivity.loops);
-            }, timeOut);
-            break;
-          case 'pauseSingleLoop':
-            const loopPad: LoopPad = userActivity.loops[0];
-            this.loadLoopIfNeeded(loadSingleLoopStack, loopPad);
-            timeOut = 0;
-            if (i === 0) {
-              this.playAllLoops(userActivity.loops);
-              timeOut = userActivity.actionTimeSeconds * 1000;
-            } else {
-              timeOut = (userActivity.actionTimeSeconds - this.userActivities[i - 1].actionTimeSeconds) * 1000;
-            }
-            setTimeout(
-              () => {
-              tempThis.pauseSingleLoop(loopPad);
-            }, timeOut);
-            break;
-          case 'playAllLoops':
-            for (const loop of userActivity.loops) {
-              this.loadLoopIfNeeded(loadSingleLoopStack, loop);
-            }
-            this.playAllLoops(userActivity.loops);
-            break;
-          case 'loadSingleLoop':
-            const lp: LoopPad = userActivity.loops[0];
-            this.loadLoopIfNeeded(loadSingleLoopStack, lp);
-            break;
-        }
+                tempThis.pauseSingleLoop(loopPad);
+              }, timeOut);
+          }
+          break;
+        case 'playAllLoops':
+          for (const loop of userActivity.loops) {
+            this.loadLoopIfNeeded(loadSingleLoopStack, loop);
+          }
+          this.playAllLoops(userActivity.loops);
+          break;
+        case 'loadSingleLoop':
+          const lp: LoopPad = userActivity.loops[0];
+          this.loadLoopIfNeeded(loadSingleLoopStack, lp);
+          break;
       }
     }
+    return userActivity;
   }
 
   private loadLoopIfNeeded(loadSingleLoopStack: LoopPad[], loop: LoopPad): void {
+    console.log(loadSingleLoopStack);
     if (!loadSingleLoopStack.includes(loop)) {
       if (this.layoutService.playingLoops === undefined ||
         !this.layoutService.playingLoops.includes(loop)) { // the loop wasn't played

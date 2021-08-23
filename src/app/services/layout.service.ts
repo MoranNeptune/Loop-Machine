@@ -118,7 +118,7 @@ export class LayoutService {
     if (this.waitingLoops.includes(loop)) {
       this.waitingLoops = this.waitingLoops.filter(loopPad => loopPad !== loop);
     }
-    if (currAudio !== undefined) {
+    if (currAudio !== undefined && this.isPlaying(currAudio)) {
       currAudio.pause();
       currAudio.currentTime = 0;
     }
